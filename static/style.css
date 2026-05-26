@@ -1,0 +1,184 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    background: #f1f5f9;
+}
+
+.container{
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+
+.sidebar{
+    width: 260px;
+    background: #0f172a;
+    color: white;
+    padding: 30px 20px;
+}
+
+.sidebar h2{
+    margin-bottom: 40px;
+    text-align: center;
+    font-size: 28px;
+}
+
+.sidebar ul{
+    list-style: none;
+}
+
+.sidebar ul li{
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+.sidebar ul li:hover{
+    background: #1e293b;
+}
+
+/* Main Content */
+
+.main-content{
+    flex: 1;
+    padding: 40px;
+}
+
+.section{
+    display: none;
+}
+
+.section.active{
+    display: block;
+}
+
+.main-content h1{
+    margin-bottom: 25px;
+    color: #0f172a;
+}
+
+/* Dashboard Cards */
+
+.cards{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card{
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    flex: 1;
+    min-width: 220px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.card h3{
+    margin-bottom: 15px;
+    color: #475569;
+}
+
+.card p{
+    font-size: 32px;
+    color: #2563eb;
+    font-weight: bold;
+}
+
+/* Form */
+
+.form-container{
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+input{
+    padding: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+input:focus{
+    outline: none;
+    border-color: #2563eb;
+}
+
+button{
+    padding: 14px;
+    background: #2563eb;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+button:hover{
+    background: #1d4ed8;
+}
+
+/* Table */
+
+.table-container{
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    overflow-x: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th{
+    background: #2563eb;
+    color: white;
+    padding: 14px;
+    text-align: left;
+}
+
+table td{
+    padding: 14px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+table tr:hover{
+    background: #f8fafc;
+}
+
+
+/* Responsive */
+
+@media(max-width: 768px){
+
+    .container{
+        flex-direction: column;
+    }
+
+    .sidebar{
+        width: 100%;
+    }
+
+}
