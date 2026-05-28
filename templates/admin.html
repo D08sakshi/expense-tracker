@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>DevSecOps</h2>
+
+        <ul>
+            <li>Dashboard</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+
+        <div class="header">
+            <h1>Admin Monitoring Dashboard</h1>
+            <p>Centralized DevSecOps Monitoring Panel</p>
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>CI/CD Pipeline</h3>
+                <p class="status active">{{ pipeline_status }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Docker Container</h3>
+                <p class="status active">{{ docker_status }}</p>
+            </div>
+
+            <div class="card">
+                <h3>AWS EC2</h3>
+                <p class="status active">{{ ec2_status }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Trivy Security Scan</h3>
+                <p class="status warning">{{ trivy_status }}</p>
+            </div>
+
+        </div>
+
+        <div class="stats-section">
+
+            <div class="stat-box">
+                <h2>{{ total_transactions }}</h2>
+                <p>Total Transactions</p>
+            </div>
+
+            <div class="stat-box">
+                <h2>₹ {{ total_expenses }}</h2>
+                <p>Total Expenses</p>
+            </div>
+
+        </div>
+
+        <div class="deployment-box">
+            <h2>Deployment Information</h2>
+
+            <p><strong>Platform:</strong> AWS EC2</p>
+            <p><strong>Containerization:</strong> Docker</p>
+            <p><strong>Automation:</strong> GitHub Actions</p>
+            <p><strong>Security:</strong> Trivy Vulnerability Scanning</p>
+        </div>
+
+    </div>
+
+</body>
+</html>
