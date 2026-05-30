@@ -26,3 +26,28 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: 'expense-tracker'
+
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy to EC2
+      run: |
+        ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+          cd ~/expense-tracker
+
+          git pull
+
+          docker stop expense-tracker || true
+          docker rm expense-tracker || true
+
+          docker build -t expense-tracker .
+
+          docker run -d \
+            --name expense-tracker \
+            -p 5000:5000 \
+            expense-tracker
+        '

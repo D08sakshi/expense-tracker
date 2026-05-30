@@ -4,6 +4,7 @@ import sqlite3
 import os
 
 app = Flask(__name__)
+# Changed the secret key
 app.secret_key = "SECRET_KEY", "temporary-key"
 
 # Create database and table
