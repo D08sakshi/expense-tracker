@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Expense Tracker Login</title>
 
     <style>
 
@@ -20,12 +20,17 @@
             background:white;
             padding:40px;
             border-radius:15px;
-            width:350px;
+            width:380px;
             text-align:center;
         }
 
         h2{
-            margin-bottom:25px;
+            margin-bottom:10px;
+        }
+
+        p{
+            color:gray;
+            margin-bottom:20px;
         }
 
         input{
@@ -34,6 +39,17 @@
             margin:10px 0;
             border:1px solid #ccc;
             border-radius:8px;
+            box-sizing:border-box;
+        }
+
+        .role-selection{
+            text-align:left;
+            margin-top:10px;
+            margin-bottom:15px;
+        }
+
+        .role-selection label{
+            margin-right:20px;
         }
 
         button{
@@ -44,11 +60,21 @@
             border:none;
             border-radius:8px;
             cursor:pointer;
-            margin-top:15px;
+            margin-top:10px;
         }
 
         button:hover{
             background:#1d4ed8;
+        }
+
+        .register-link{
+            margin-top:15px;
+        }
+
+        .register-link a{
+            color:#2563eb;
+            text-decoration:none;
+            font-weight:bold;
         }
 
     </style>
@@ -58,17 +84,54 @@
 
     <div class="login-box">
 
-        <h2>Admin Login</h2>
+        <h2>Expense Tracker</h2>
+
+        <p>Login to continue</p>
 
         <form method="POST">
 
-            <input type="text" name="username" placeholder="Username" required>
+            <input type="text"
+                   name="username"
+                   placeholder="Username"
+                   required>
 
-            <input type="password" name="password" placeholder="Password" required>
+            <input type="password"
+                   name="password"
+                   placeholder="Password"
+                   required>
+
+            <div class="role-selection">
+
+                <strong>Login As:</strong><br><br>
+
+                <label>
+                    <input type="radio"
+                           name="role"
+                           value="user"
+                           checked>
+                    User
+                </label>
+
+                <label>
+                    <input type="radio"
+                           name="role"
+                           value="admin">
+                    Admin
+                </label>
+
+            </div>
 
             <button type="submit">Login</button>
 
         </form>
+
+        <div class="register-link">
+
+            Don't have an account?
+
+            <a href="/register">Register Here</a>
+
+        </div>
 
     </div>
 

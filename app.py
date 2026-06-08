@@ -12,6 +12,7 @@ def init_db():
     conn = sqlite3.connect('expenses.db')
     cursor = conn.cursor()
 
+    # Expenses Table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,13 +23,27 @@ def init_db():
         )
     ''')
 
+    # Users Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        )
+    ''')
+
     conn.commit()
     conn.close()
-
 
 # Home Route
 @app.route('/')
 def index():
+
+    if 'user_id' not in session:
+        return redirect('/login')
+
     conn = sqlite3.connect('expenses.db')
     cursor = conn.cursor()
 
@@ -67,7 +82,6 @@ def add_expense():
 
     return redirect('/')
 
-# Admin Login Route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
@@ -75,17 +89,93 @@ def login():
 
         username = request.form['username']
         password = request.form['password']
+        role = request.form['role']
 
-        # Simple Admin Credentials
-        if username == 'admin' and password == 'admin123':
+        conn = sqlite3.connect('expenses.db')
+        cursor = conn.cursor()
 
-            session['admin'] = True
-            return redirect('/admin')
+        # Admin Login
+        if role == 'admin':
 
-        else:
-            return "Invalid Username or Password"
+            if username == 'admin' and password == 'admin123':
+
+                session['admin'] = True
+                conn.close()
+
+                return redirect('/admin')
+
+            conn.close()
+            return "Invalid Admin Credentials"
+
+        # User Login
+        cursor.execute(
+            '''
+            SELECT id, username
+            FROM users
+            WHERE username=? AND password=?
+            ''',
+            (username, password)
+        )
+
+        user = cursor.fetchone()
+
+        conn.close()
+
+        if user:
+
+            session['user_id'] = user[0]
+            session['username'] = user[1]
+
+            return redirect('/')
+
+        return "Invalid Username or Password"
 
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+
+    session.clear()
+
+    return redirect('/login')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+
+    if request.method == 'POST':
+
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        conn = sqlite3.connect('expenses.db')
+        cursor = conn.cursor()
+
+        try:
+
+            cursor.execute(
+                '''
+                INSERT INTO users
+                (username, email, password, role)
+                VALUES (?, ?, ?, ?)
+                ''',
+                (username, email, password, 'user')
+            )
+
+            conn.commit()
+
+        except:
+
+            return "Username or Email already exists"
+
+        finally:
+
+            conn.close()
+
+        return redirect('/login')
+
+    return render_template('register.html')
 
 
 # Admin Dashboard Route

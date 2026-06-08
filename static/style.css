@@ -182,3 +182,16 @@ table tr:hover{
     }
 
 }
+
+.logout-btn{
+    background:#dc2626;
+    color:white;
+    padding:10px 15px;
+    border-radius:8px;
+    text-decoration:none;
+    float:right;
+}
+
+.logout-btn:hover{
+    background:#b91c1c;
+}
