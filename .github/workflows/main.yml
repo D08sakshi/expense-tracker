@@ -58,6 +58,7 @@ jobs:
           docker run -d \
             --restart unless-stopped \
             --name expense-tracker \
+            -v /home/ec2-user/database/expenses.db:/app/expenses.db \
             -p 5000:5000 \
             expense-tracker
         '
