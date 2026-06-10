@@ -22,6 +22,14 @@ def init_db():
             date TEXT NOT NULL
         )
     ''')
+     # Add user_id column if it doesn't already exist
+    try:
+        cursor.execute('''
+            ALTER TABLE expenses
+            ADD COLUMN user_id INTEGER
+        ''')
+    except sqlite3.OperationalError:
+        pass
 
     # Users Table
     cursor.execute('''
@@ -47,7 +55,10 @@ def index():
     conn = sqlite3.connect('expenses.db')
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM expenses")
+    cursor.execute(
+        "SELECT * FROM expenses WHERE user_id=?",
+        (session['user_id'],)
+    )
     expenses = cursor.fetchall()
 
     total = sum(expense[2] for expense in expenses)
@@ -72,11 +83,18 @@ def add_expense():
     conn = sqlite3.connect('expenses.db')
     cursor = conn.cursor()
 
-    cursor.execute('''
-        INSERT INTO expenses (title, amount, category, date)
-        VALUES (?, ?, ?, ?)
-    ''', (title, amount, category, date))
+    user_id = session['user_id']
 
+    cursor.execute('''
+      INSERT INTO expenses
+      (user_id, title, amount, category, date)
+      VALUES (?, ?, ?, ?, ?)
+       ''', (
+    user_id,
+    title,
+    amount,
+    category,
+    date))
     conn.commit()
     conn.close()
 
