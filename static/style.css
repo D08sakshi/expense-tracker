@@ -58,7 +58,9 @@ body{
 }
 
 .section.active{
-    display: block;
+    display:block;
+  
+
 }
 
 .main-content h1{
@@ -92,6 +94,44 @@ body{
     font-size: 32px;
     color: #2563eb;
     font-weight: bold;
+}
+
+.user-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:20px;
+
+    background:white;
+
+    border-radius:10px;
+
+    overflow:hidden;
+}
+
+.user-table th{
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:14px;
+}
+
+.user-table td{
+
+    padding:12px;
+
+    border-bottom:1px solid #ddd;
+
+    text-align:center;
+}
+
+.user-table tr:hover{
+
+    background:#f5f5f5;
 }
 
 /* Form */
@@ -183,15 +223,201 @@ table tr:hover{
 
 }
 
-.logout-btn{
-    background:#dc2626;
-    color:white;
-    padding:10px 15px;
-    border-radius:8px;
-    text-decoration:none;
+
+.profile-panel{
+    position:fixed;
+    top:0;
+    right:-350px;
+
+    width:340px;
+    height:100vh;
+
+    background:#ffffff;
+
+    box-shadow:-8px 0 25px rgba(0,0,0,0.15);
+
+    transition:0.35s ease;
+
+    padding:30px;
+
+    z-index:999;
+
+    border-top-left-radius:20px;
+    border-bottom-left-radius:20px;
+}
+
+.profile-panel.active{
+    right:0;
+}
+
+/* Close Button */
+.close-btn{
+    font-size:28px;
+    cursor:pointer;
     float:right;
+    color:#64748b;
+    transition:0.3s;
+}
+
+.close-btn:hover{
+    color:#ef4444;
+}
+
+/* Title */
+.profile-panel h2{
+    color:#0f172a;
+    margin-bottom:20px;
+    font-size:24px;
+}
+
+.profile-panel hr{
+    border:none;
+    border-top:1px solid #e2e8f0;
+    margin-bottom:25px;
+}
+
+/* User Info */
+.profile-panel p{
+    margin-bottom:18px;
+    padding:12px 15px;
+
+    background:#f8fafc;
+
+    border-radius:10px;
+
+    color:#334155;
+
+    font-size:15px;
+}
+
+.profile-panel strong{
+    color:#0f172a;
+}
+
+/* Logout Button */
+.logout-btn{
+    display:block;
+
+    margin-top:30px;
+
+    text-align:center;
+
+    background:#dc2626;
+
+    color:white;
+
+    padding:14px;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:0.3s;
 }
 
 .logout-btn:hover{
     background:#b91c1c;
+    transform:translateY(-2px);
+}
+
+/* Profile Button */
+.profile-btn{
+    position:absolute;
+
+    top:20px;
+    right:30px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 22px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    box-shadow:0 4px 10px rgba(37,99,235,0.25);
+
+    transition:0.3s;
+}
+
+.profile-btn:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+/* Dashboard Background */
+.main-content {
+    background:#f1f5f9;
+    min-height: 100vh;
+    padding: 30px;
+}
+
+/* Charts Container */
+.charts-container{
+    margin-top:30px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+/* Rows */
+.chart-row{
+    display:flex;
+    gap:20px;
+}
+
+/* Cards */
+.chart-card{
+    flex:1;
+    background:#fff;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Top Trend Chart */
+.chart-row:first-child .chart-card{
+    height:350px;
+}
+
+/* Bottom Charts */
+.chart-row:last-child .chart-card{
+    height:400px;
+}
+
+/* Titles */
+.chart-card h3{
+    margin:0 0 15px;
+    font-size:20px;
+    font-weight:600;
+    color:#0f172a;
+}
+
+/* Canvas */
+.chart-card canvas{
+    width:100% !important;
+    height:calc(100% - 50px) !important;
+}
+
+
+/* Mobile */
+@media(max-width:768px){
+
+    .chart-row{
+        flex-direction:column;
+    }
+
+    .chart-row:first-child .chart-card,
+    .chart-row:last-child .chart-card{
+        height:350px;
+    }
 }

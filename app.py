@@ -1,5 +1,7 @@
 # Devops Project
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, jsonify
+from collections import defaultdict
+from datetime import datetime
 import sqlite3
 import os
 
@@ -59,19 +61,80 @@ def index():
         "SELECT * FROM expenses WHERE user_id=?",
         (session['user_id'],)
     )
+
     expenses = cursor.fetchall()
 
+    # Total Amount Spent
     total = sum(expense[2] for expense in expenses)
+
+    # -------------------------------
+    # Last 7 Days Expense Trend
+    # -------------------------------
+
+    daily_data = defaultdict(float)
+
+    for expense in expenses:
+
+        date = expense[4]
+        amount = expense[2]
+
+        daily_data[date] += amount
+
+    daily_labels = sorted(daily_data.keys())[-7:]
+    daily_values = []
+
+    for date in daily_labels:
+        daily_values.append(daily_data[date])
+
+    # -------------------------------
+    # Expense Category Distribution
+    # -------------------------------
+
+    category_data = defaultdict(float)
+
+    for expense in expenses:
+
+        category = expense[3]
+        amount = expense[2]
+
+        category_data[category] += amount
+
+    category_labels = list(category_data.keys())
+    category_values = list(category_data.values())
+
+    # -------------------------------
+    # Monthly Expenses
+    # -------------------------------
+
+    monthly_data = defaultdict(float)
+
+    for expense in expenses:
+
+        date = datetime.strptime(expense[4], "%Y-%m-%d")
+        month = date.strftime("%b")
+
+        monthly_data[month] += expense[2]
+
+    month_labels = list(monthly_data.keys())
+    month_values = list(monthly_data.values())
 
     conn.close()
 
     return render_template(
         'index.html',
         expenses=expenses,
-        total=total
+        total=total,
+
+        daily_labels=daily_labels,
+        daily_values=daily_values,
+
+        category_labels=category_labels,
+        category_values=category_values,
+
+        month_labels=month_labels,
+        month_values=month_values
     )
-
-
+    
 # Add Expense Route
 @app.route('/add', methods=['POST'])
 def add_expense():
@@ -150,6 +213,31 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/profile')
+def profile():
+
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    conn = sqlite3.connect('expenses.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT username, email, role
+        FROM users
+        WHERE id=?
+    ''', (session['user_id'],))
+
+    user = cursor.fetchone()
+
+    conn.close()
+
+    return {
+        "username": user[0],
+        "email": user[1],
+        "role": user[2]
+    }
+
 @app.route('/logout')
 def logout():
 
@@ -205,11 +293,20 @@ def admin():
     conn = sqlite3.connect('expenses.db')
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM expenses")
-    expenses = cursor.fetchall()
+    cursor.execute("""
+      SELECT
+    users.username,
+    users.email,
+    COUNT(expenses.id) AS total_entries,
+    COALESCE(SUM(expenses.amount),0) AS total_amount
+    FROM users
+    LEFT JOIN expenses
+    ON users.id = expenses.user_id
+    GROUP BY users.id""")
 
-    total_expenses = sum(expense[2] for expense in expenses)
-    total_transactions = len(expenses)
+    users = cursor.fetchall()
+    total_users = len(users)
+    total_expenses = sum(user[3] for user in users)
 
     conn.close()
 
@@ -227,13 +324,14 @@ def admin():
 
     return render_template(
         'admin.html',
+        total_users=total_users,
         total_expenses=total_expenses,
-        total_transactions=total_transactions,
         app_status=app_status,
         pipeline_status=pipeline_status,
         docker_status=docker_status,
         ec2_status=ec2_status,
-        trivy_status=trivy_status
+        trivy_status=trivy_status,
+        users=users
     )
     
 

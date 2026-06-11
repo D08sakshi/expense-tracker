@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker Dashboard</title>
-    <a href="/logout" class="logout-btn">Logout</a>
+    <button onclick="openProfile()" class="profile-btn">
+    👤 Profile
+    </button>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -52,6 +55,43 @@
                 </div>
 
             </div>
+            <!-- Charts Section -->
+
+<div class="charts-container">
+
+    <div class="chart-row">
+
+        <div class="chart-card">
+
+            <h3>Last 7 Days Expense Trend</h3>
+
+            <canvas id="dailyChart"></canvas>
+
+        </div>
+
+    </div>
+
+    <div class="chart-row">
+
+        <div class="chart-card">
+
+            <h3>Expense Categories</h3>
+
+            <canvas id="categoryChart"></canvas>
+
+        </div>
+
+        <div class="chart-card">
+
+            <h3>Monthly Expenses</h3>
+
+            <canvas id="monthlyChart"></canvas>
+
+        </div>
+
+    </div>
+
+  </div>
 
         </div>
 
@@ -137,6 +177,170 @@ function showSection(sectionId){
 }
 
 </script>
+<div id="profilePanel" class="profile-panel">
 
+    <span class="close-btn" onclick="closeProfile()">&times;</span>
+
+    <h2>My Profile</h2>
+
+    <hr>
+
+    <p><strong>Username:</strong>
+        <span id="username"></span>
+    </p>
+
+    <p><strong>Email:</strong>
+        <span id="email"></span>
+    </p>
+
+    <p><strong>Role:</strong>
+        <span id="role"></span>
+    </p>
+
+    <a href="/logout" class="logout-btn">
+        Logout
+    </a>
+
+</div>
+
+<script>
+
+async function openProfile(){
+
+    const response = await fetch('/profile');
+
+    const data = await response.json();
+
+    document.getElementById('username').innerHTML=data.username;
+    document.getElementById('email').innerHTML=data.email;
+    document.getElementById('role').innerHTML=data.role;
+
+    document.getElementById('profilePanel')
+        .classList.add('active');
+}
+
+function closeProfile(){
+
+    document.getElementById('profilePanel')
+        .classList.remove('active');
+}
+
+</script>
+
+
+<script>
+
+const dailyLabels = {{ daily_labels|tojson }};
+const dailyValues = {{ daily_values|tojson }};
+
+const categoryLabels = {{ category_labels|tojson }};
+const categoryValues = {{ category_values|tojson }};
+
+const monthLabels = {{ month_labels|tojson }};
+const monthValues = {{ month_values|tojson }};
+
+
+// Daily Line Chart
+new Chart(document.getElementById('dailyChart'), {
+    type: 'line',
+    data: {
+        labels: dailyLabels,
+        datasets: [{
+            label: 'Expenses',
+            data: dailyValues,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37,99,235,0.15)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 5,
+            pointHoverRadius: 7
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: {
+                position: 'top'
+            }
+        },
+
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: (value) => `₹ ${value.toLocaleString('en-IN')}`
+                }
+            }
+        }
+    }
+});
+
+
+// Category Doughnut Chart
+new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+        labels: categoryLabels,
+        datasets: [{
+            data: categoryValues,
+            backgroundColor: [
+                '#2563EB',
+                '#22C55E',
+                '#F59E0B',
+                '#EF4444',
+                '#8B5CF6',
+                '#06B6D4'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+
+// Monthly Bar Chart
+new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: {
+        labels: monthLabels,
+        datasets: [{
+            label: 'Expenses',
+            data: monthValues,
+            backgroundColor: '#2563EB',
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: (value) => `₹ ${value.toLocaleString('en-IN')}`
+                }
+            }
+        }
+    }
+});
+
+</script>
 </body>
 </html>

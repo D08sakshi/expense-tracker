@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <a href="/logout" class="logout-btn">Logout</a>
     <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
 </head>
 <body>
-
+     <div class="admin-top-actions">
+    <a href="/logout" class="admin-logout-btn">
+        Logout
+    </a>
+    </div>
     <div class="sidebar">
-        <h2>DevSecOps</h2>
+        <h2>Expense Tracker</h2>
 
-        <ul>
-            <li>Dashboard</li>
-        </ul>
     </div>
 
     <div class="main-content">
@@ -51,8 +51,8 @@
         <div class="stats-section">
 
             <div class="stat-box">
-                <h2>{{ total_transactions }}</h2>
-                <p>Total Transactions</p>
+                <h2>{{ users|length }}</h2>
+                 <p>Registered Users</p>
             </div>
 
             <div class="stat-box">
@@ -61,7 +61,35 @@
             </div>
 
         </div>
+        <div class="deployment-box">
 
+    <h2>Registered Users</h2>
+
+    <table class="users-table">
+
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Total Entries</th>
+                <th>Total Expenses</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user[0] }}</td>
+                <td>{{ user[1] }}</td>
+                <td>{{ user[2] }}</td>
+                <td>₹ {{ user[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
         <div class="deployment-box">
             <h2>Deployment Information</h2>
 

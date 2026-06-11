@@ -134,3 +134,52 @@ body{
     margin-bottom:10px;
     color:#374151;
 }
+
+.admin-top-actions{
+    position:fixed;
+    top:20px;
+    right:30px;
+    z-index:1000;
+}
+
+.admin-logout-btn{
+    background:#dc2626;
+    color:white;
+    padding:10px 20px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.admin-logout-btn:hover{
+    background:#b91c1c;
+}
+
+/* Users Table */
+
+.users-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+.users-table th,
+.users-table td{
+    border:1px solid #d1d5db;
+    padding:14px;
+    text-align:left;
+}
+
+.users-table th{
+    background:#2563eb;
+    color:white;
+    font-weight:600;
+}
+
+.users-table tbody tr:nth-child(even){
+    background:#f9fafb;
+}
+
+.users-table tbody tr:hover{
+    background:#eff6ff;
+}
